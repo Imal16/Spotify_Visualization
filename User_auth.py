@@ -11,12 +11,13 @@ import secrets
 from flask import Flask, redirect, url_for, session, request
 from urllib.parse import urlencode
 import requests
+import os
 
-#https://github.com/bellerb/Spotify_Flask/blob/master/main.py
 
-CLIENT_ID = "da52de03a4e04567a9e793cad846b349"
-client_secret = "95970fa08e2d4df5903a9404790994c0"
-secret_key = secrets.token_urlsafe(16)
+
+CLIENT_ID = os.environ['Spotify_Client_ID']
+CLIENT_SECRET = os.environ['Spotify_Client_Secret']
+
 
 
 
@@ -24,7 +25,7 @@ CLIENT_SIDE_URL = "http://127.0.0.1"
 PORT = 5000
 REDIRECT_URI = "{}:{}/data".format(CLIENT_SIDE_URL, PORT)
 
-Spotify = Spotify_Client.Spotify_API(CLIENT_ID, client_secret)
+Spotify = Spotify_Client.Spotify_API(CLIENT_ID, CLIENT_SECRET)
 
 #app = Flask(__name__)
 #app.secret_key = secret_key
@@ -58,7 +59,7 @@ def Access_Refresh_token():
 
 def Profile_Data(header):
     # Get user profile data
-    user_profile_api_endpoint = Spotify.get_base_url()
+    user_profile_api_endpoint = '{}/me'.format(Spotify.get_base_url())
     profile_response = requests.get(user_profile_api_endpoint, headers=header)
     profile_data = profile_response.json()
     return profile_data

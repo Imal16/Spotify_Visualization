@@ -7,8 +7,12 @@ Created on Mon Jan 25 18:28:14 2021
 
 from flask import Flask, request, redirect
 from User_auth import User_Oauth, Access_Refresh_token, Profile_Data
+import secrets
+
+secret_key = secrets.token_urlsafe(16)
 
 app = Flask(__name__)
+app.secret_key = secret_key
 
 @app.route("/")
 def index():
@@ -26,7 +30,7 @@ def callback():
     profile_data = Profile_Data(authorization_header)
     print(profile_data)
     
-    return "HELLO WOLRD"
+    return profile_data
     
 
 

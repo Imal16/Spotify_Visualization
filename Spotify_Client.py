@@ -12,7 +12,7 @@ import base64
 import certifi
 import datetime
 from urllib.parse import urlencode
-
+import os
 
 # 
 # Authentication: I prove who I say I am -> username & password
@@ -23,8 +23,9 @@ from urllib.parse import urlencode
 # In[2]:
 
 
-client_id = "da52de03a4e04567a9e793cad846b349"
-client_secret = "95970fa08e2d4df5903a9404790994c0"
+#client_id = os.environ['Spotify_Client_ID']
+#client_secret = os.environ['Spotify_Client_Secret']
+
 
 
 
