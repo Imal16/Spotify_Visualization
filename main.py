@@ -6,8 +6,15 @@ Created on Mon Jan 25 18:28:14 2021
 """
 
 from flask import Flask, request, redirect
-from User_auth import User_Oauth, Access_Refresh_token, Profile_Data
 import secrets
+import os
+import Spotify_Client
+
+
+CLIENT_ID = os.environ['Spotify_Client_ID']
+CLIENT_SECRET = os.environ['Spotify_Client_Secret']
+
+Spotify = Spotify_Client.Spotify_API(CLIENT_ID, CLIENT_SECRET)
 
 secret_key = secrets.token_urlsafe(16)
 
@@ -17,17 +24,17 @@ app.secret_key = secret_key
 @app.route("/")
 def index():
     # Authorization
-    auth_url = User_Oauth()
+    auth_url = Spotify.User_Oauth()
     return redirect(auth_url)
 
 @app.route("/data")
 def callback():
     print('callback')
-    authorization_header = Access_Refresh_token()
+    Spotify.Access_Refresh_token()
 
     #Gathering of profile data
     print('profile_data')
-    profile_data = Profile_Data(authorization_header)
+    profile_data = Spotify.Profile_Data()
     print(profile_data)
     
     return profile_data
