@@ -138,7 +138,7 @@ class Spotify_API(object):
         return auth_url, header
     
     def User_Oauth(self):
-        #get user to approve accessing data
+        #get user to approve accessing data, need to redirect user to this url
         auth_url, auth_parameters  = self.User_Authentication()
         url_encoded = urlencode(auth_parameters)
         user_auth_url ="{}/?{}".format(auth_url, url_encoded)
@@ -149,8 +149,7 @@ class Spotify_API(object):
         auth_token = request.args['code']
         access_token_params= { 'grant_type' : 'authorization_code',
                               'code' : str(auth_token),
-                              'redirect_uri' : self.REDIRECT_URI
-            }
+                              'redirect_uri' : self.REDIRECT_URI}
         headers = self.get_token_header()
         token_url = self.get_token_url()
         
@@ -197,7 +196,7 @@ class Spotify_API(object):
         TYPE
             DESCRIPTION. Json of lookup results
         '''
-
+        #want to modify so it can handle multiple inputs...
         endpoint = "{}/{}/{}".format(self.base_url,ressource_type,lookup_id)
         headers = self.get_access_headers()
         req = requests.get(endpoint, headers = headers)
@@ -299,6 +298,17 @@ class Spotify_API(object):
         
         return self.base_search(query_params)
     
+    def get_related_artists(self, artist_id):
+        '''
+        the response body contains an object whose key is "artists" and whose value is an array of up to 20 artist objects in JSON format. 
+        '''        
+        r_artist_end ='{}/artists/{}/related-artists'.format(self.get_base_url(),artist_id)
+        headers = self.get_access_headers()
+        r_artists = requests.get(r_artist_end, headers = headers)
+        r_artists_data = r_artists.json()
+        return r_artists_data
+        
+    
 # =============================================================================
 #     USER DATA APIs, Authentication NEEDED!
 # =============================================================================
@@ -311,12 +321,12 @@ class Spotify_API(object):
         profile_data = profile_response.json()
         return profile_data
         
-    def get_User_Top_Data(self, type = "tacks", time_range = 'medium_term', limit = 50, offset= 0):
+    def get_User_Top_Data(self, datatype = "tracks", time_range = 'medium_term', limit = 50, offset= 0):
         '''
         Parameters
         ----------
         type : String, optional
-            DESCRIPTION. The default is "tacks". Other option is 'artist'
+            DESCRIPTION. The default is "tracks". Other option is 'artists'
             
         time_range : String, optional
             DESCRIPTION. The default is 'medium_term' = last 6 months, 'long_term' = serveral years, "short_term" -> last 4 wwks
@@ -333,8 +343,14 @@ class Spotify_API(object):
             DESCRIPTION.
 
         '''
-        
-        return -1
+        #	https://api.spotify.com/v1/me/top/{type}
+        query_params = urlencode({"time_range": time_range, "limit":limit, "offset":offset})
+        top_api_endpoint = '{}/me/top/{}?{}'.format(self.get_base_url(), datatype, query_params)
+        print(top_api_endpoint)
+        headers = self.get_access_headers()
+        top_data = requests.get(top_api_endpoint, headers=headers)
+        top_data = top_data.json()
+        return top_data
     
     '''
     API Endpoints to look at
