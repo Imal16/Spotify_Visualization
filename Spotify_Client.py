@@ -236,7 +236,7 @@ class Spotify_API(object):
         header = self.get_access_headers()
         endpoint = "{}/search".format(self.base_url) #get
         search_url = "{}?{}".format(endpoint,query_params)
-        print(search_url)
+        #print(search_url)
         
         req = requests.get(search_url, headers = header)
         if req.status_code not in range(200,299):
