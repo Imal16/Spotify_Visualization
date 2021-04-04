@@ -34,6 +34,8 @@ class Spotify_API(object):
     access_token = None
     access_token_expires = datetime.datetime.now()
     access_token_did_expire = True
+    refresh_token = None
+    did_User_Auth = False
     client_id = None
     client_secret = None
     token_url = "https://accounts.spotify.com/api/token"
@@ -81,7 +83,7 @@ class Spotify_API(object):
         return {'grant_type' : 'client_credentials'}
     
     def perform_authorization(self):
-        print('Authorization')
+        print('Performing Authorization')
         token_url = self.token_url
         token_data = self.get_token_data()
         token_headers = self.get_token_header()
@@ -109,6 +111,11 @@ class Spotify_API(object):
         #print(token)
         
         if expires < now:
+            
+            if self.did_User_Auth == True:
+                
+                self.Refresh_Access_Token()
+                
             #authentitacation expired, redo authentication
             self.perform_authorization()
 
@@ -172,11 +179,42 @@ class Spotify_API(object):
         self.access_token = access_token
         self.access_token_expires = expires
         self.access_token_did_expire = expires < now
+        self.refresh_token = refresh_token
+        self.did_User_Auth = True
         
         #authorization_header = {"Authorization":"Bearer {}".format(access_token)}
         return True
     
-       
+    def Refresh_Access_Token(self):
+        
+        request_body = urlencode({"grant_type": "refresh_token", "refresh_token": self.refresh_token})
+        
+        token_url = self.get_token_url()
+        header = self.get_token_deader()
+        
+        refresh_access = requests.post(token_url, data = request_body, headers = header)
+        
+        if refresh_access.status_code not in range(200,299):
+            raise Exception('Could not Refresh Access Token for User Data')
+        
+        
+        response = refresh_access.json()
+        
+        access_token = response['access_token']
+        expires_in = response['expires_in']
+        
+        now = datetime.datetime.now()
+        expires = now + datetime.timedelta(seconds=expires_in)
+        
+        self.access_token = access_token
+        self.access_token_expires = expires
+        self.access_token_did_expire = expires < now
+        
+        return True
+        
+        
+        
+        
 # =============================================================================
 #    SIMPLE SEARCH, USER OAUTH NOT NEEDED ONLY BASIC SPOTIFY CLIENT AND SECRET 
 # =============================================================================

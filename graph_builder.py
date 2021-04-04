@@ -72,6 +72,7 @@ def build_graph(user_data = False):
             artist_graph[artist_data['name']] = {'related': [], 'id': artist_data['id'], 
                                     'genre': artist_genre, 'image': artist_data['images'][0]['url'],
                                     'followers': artist_data['followers']['total'],'Top' : True}
+            
     temp_graph = artist_graph.copy()
 
     for i in temp_graph:
@@ -106,23 +107,28 @@ def visualize_graph(graph):
             
         except:
             print('Adding Top Artist: ', artist)
+            title = "User's Top Artist, Genre: {}".format(graph[artist]['genre'])
+            
             Artist_Network.add_node(artist, label = artist, group = graph[artist]['genre'],
                                     shape = 'circularImage', image = graph[artist]['image'],
-                                    borderWidth = 2, value = int(graph[artist]['followers']), 
+                                    borderWidth = 4, value = int(graph[artist]['followers']),
+                                    labelHighlightBold = True, title = title,
                                     physics = True)
             
         for related in graph[artist]['related']:
             
             try:
-                print('Adding Related Artist: ', artist)
+                #print('Adding Related Artist: ', artist)
                 Artist_Network.get_node(related)
     
             except:
-                #print('Adding Related Artist: ', artist)
+                print('Adding Related Artist: ', related)
+                title = "Genre: {}".format(graph[artist]['genre'])
+                
                 Artist_Network.add_node(related, label = related, group = graph[related]['genre'], 
                                    shape = 'circularImage', image = graph[related]['image'],
                                    borderWidth = 2, value = int(graph[related]['followers']),
-                                   physics = True)
+                                   title = title, physics = True)
                 
             Artist_Network.add_edge(artist,related, physics = True)
     
@@ -130,3 +136,9 @@ def visualize_graph(graph):
     Artist_Network.show('example.html')
     
     return Artist_Network
+
+
+#IF want to improve, compare audio features to get discrimanating features to color of edges
+#map map differentiating audio features to a color via dict and then forllow something like
+#https://stackoverflow.com/questions/63717126/how-to-change-the-color-of-subgraph-using-pyvis
+
