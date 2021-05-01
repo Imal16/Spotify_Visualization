@@ -19,4 +19,4 @@ Requests, Urlencode, secrets, Flask, Pyvis, Networkx, Jupyter notebook.
 
 #### Note
 - Basic API client was followed from a tutorial by Coding For Entrepreneurs to obtain good structure and format for coding an API Client (Covered basic search and application Auth).
-- Additional Client features was coded myself such as understanding and functioning of User Authorization and obtaining User Data. Idea of building a network of Artist was also mine)
+- Additional Client features was coded myself such as understanding and functioning of User Authorization and obtaining User Data. Idea of building a network of Artist was also mine.
