@@ -16,3 +16,7 @@ Requests, Urlencode, secrets, Flask, Pyvis, Networkx, Jupyter notebook.
 
 - Create a better way classify Artists in genres for the grouping and coloring of the network.
 - Create Generalized sound profiles between artist to identify what is the most discriminating factor between them and color the network's edges appropriately. Ex: Artist A's music is more danceable than Artist B, so that edge should be labeled as such.
+
+#### Note
+- Basic API client was followed from a tutorial by Coding For Entrepreneurs to obtain good structure and format for coding an API Client (Covered basic search and application Auth).
+- Additional Client features was coded myself such as understanding and functioning of User Authorization and obtaining User Data. Idea of building a network of Artist was also mine)
